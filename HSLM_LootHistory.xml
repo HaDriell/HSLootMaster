@@ -1,0 +1,120 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/UI_shared.xsd">
+    <Script file="HSLM_LootHistory.lua"/>
+    
+    <Frame name="HSLM_LootHistoryElementTemplate" mixin="HSLM_ElementMixin" virtual="true">
+        <Size x="218" y="58"/>
+
+        <Frames>
+            <ItemButton parentKey="Item" registerForClicks="LeftButtonUp, RightButtonUp">
+                <!-- Override ItemButton to have no normal texture -->
+                <NormalTexture/>
+                <Size x="48" y="48"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="6" y="0"/>
+                </Anchors>
+            </ItemButton>
+        </Frames>
+
+        <Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="NameFrame" atlas="looting_itemcard_bg" useAtlasSize="false" setAllPoints="true"/>
+			</Layer>
+
+            <Layer level="ARTWORK">
+				<FontString parentKey="ItemName" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Size x="150" y="32"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Item" relativePoint="TOPRIGHT" x="6" y="-2"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+
+			<Layer level="BORDER">
+				<Texture parentKey="BorderFrame" atlas="lootroll-itementry-background" useAtlasSize="false" setAllPoints="false"/>
+			</Layer>
+        </Layers>
+
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEvent method="OnEvent"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+
+    <Frame name="HSLM_LootHistoryFrame" mixin="HSLM_LootHistoryFrameMixin" inherits="DefaultPanelFlatTemplate" movable="true" resizable="true" registerForDrag="LeftButton" clampedToScreen="true" parent="UIParent" frameStrata="HIGH" toplevel="true" hidden="true">
+        <Size x="261" y="590"/>
+
+        <Anchors>
+            <Anchor point="TOPLEFT" x="150" y="-150"/>
+        </Anchors>
+
+        <ResizeBounds>
+            <minResize>
+                <AbsDimension x="261" y="300"/>
+            </minResize>
+            <maxResize>
+                <AbsDimension x="261" y="800"/>
+            </maxResize>
+        </ResizeBounds>
+
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEvent method="OnEvent"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+        </Scripts>
+
+        <Frames>
+            <Button parentKey="ClosePanelButton" inherits="UIPanelCloseButtonDefaultAnchors"/>
+            <Frame parentKey="ScrollBox" inherits="WoWScrollBoxList">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="6" y="-90"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" x="238" y="4"/>
+                </Anchors>
+            </Frame>
+            <EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="3" y="2"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="3"/>
+				</Anchors>
+            </EventFrame>
+
+			<Frame parentKey="EncounterDropDown" inherits="UIDropDownMenuTemplate" parentArray="uncommittedRegions">
+				<Size x="239" y="28"/>
+				<Anchors>
+					<Anchor point="TOP" x="1" y="-32"/>
+				</Anchors>
+			</Frame>
+
+            <Button parentKey="ResizeButton" frameStrata="HIGH" frameLevel="600">
+				<Size x="32" y="12"/>
+				<Anchors>
+					<Anchor point="TOP" relativePoint="BOTTOM" x="0" y="3"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture atlas="lootroll-resizehandle" setAllPoints="true"/>
+					</Layer>
+				</Layers>
+			</Button>
+        </Frames>
+        
+        <Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="NoInfoString" inherits="GameFontNormal" text="LOOT_HISTORY_INFO_TEXT" justifyH="CENTER" justifyV="TOP">
+					<Size x="200" y="0"/>
+					<Color color="DISABLED_FONT_COLOR"/>
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-42"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+    </Frame>
+
+</Ui>
