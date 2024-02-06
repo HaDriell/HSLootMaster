@@ -9,7 +9,6 @@ local HSLM_ElementEvents =
 
 function HSLM_ElementMixin:OnLoad()
     self.Item.IconBorder:SetSize(self.Item:GetWidth(), self.Item:GetHeight());
-    FrameUtil.RegisterFrameForEvents(self, HSLM_ElementEvents);
 end
 
 function HSLM_ElementMixin:OnEnter()
@@ -33,6 +32,7 @@ end
 
 function HSLM_ElementMixin:Init(dropInfo)
     self.dropInfo = dropInfo;
+    self.playerRolls = {};
 
     local item = Item:CreateFromItemLink(self.dropInfo.itemHyperlink);
     local itemQuality = item:GetItemQuality();
@@ -58,9 +58,19 @@ function HSLM_ElementMixin:Init(dropInfo)
         GameTooltip:Hide();
     end);
 
+    self.StartRollingItem:SetScript("OnClick", function () 
+        self:OnStartRollingItemClicked();
+    end);
+
+    self.StopRollingItem:SetScript("OnClick", function ()
+        self:OnStopRollingItemClicked();
+    end);
+
     if self:IsMouseMotionFocus() then
         self:SetTooltip();
     end
+    
+    self:SetupPlayerRollsDropDown();
 end
 
 function HSLM_ElementMixin:OnEvent(event, ...)
@@ -77,7 +87,58 @@ function HSLM_ElementMixin:HandleChatMessageSystem(text, ...)
         return -- Not a valid /rand message
     end
 
-    -- TODO : Check if this Element is the active Loot here
+    table.insert(self.playerRolls, 
+    { 
+        playerName = playerName,
+        rollValue = rollValue,
+        rollMin = rollMin,
+        rollMax = rollMax
+    });
+
+    self:SetupPlayerRollsDropDown();
+end
+
+function HSLM_ElementMixin:SetupPlayerRollsDropDown()
+    local function Initializer(dropDown, level)
+        local function DropDownButtonClick(button)
+            -- use button.value to do stuff when selected
+        end
+
+        for index, playerRoll in ipairs(self.playerRolls) do
+            local info = UIDropDownMenu_CreateInfo();
+            info.fontObject = GameFontHighlightSmall;
+            info.text = string.format("%s %d (%d-%d)", playerRoll.playerName, playerRoll.rollValue, playerRoll.rollMin, playerRoll.rollMax);
+            info.minWidth = 150;
+            info.value = index;
+            info.func = DropDownButtonClick;
+            UIDropDownMenu_AddButton(info);
+        end
+    end
+
+    local totalWidth = 150;
+    local dropDownEdgeWidth = 16;
+    UIDropDownMenu_SetWidth(self.PlayerRollsDropDown, totalWidth - dropDownEdgeWidth);
+    UIDropDownMenu_JustifyText(self.PlayerRollsDropDown, "RIGHT");
+    UIDropDownMenu_Initialize(self.PlayerRollsDropDown, Initializer);
+end
+
+function HSLM_ElementMixin:OnStartRollingItemClicked()
+
+    -- Announce Item to RAID_WARNING
+    local message = "Start rolling for " .. self.dropInfo.itemHyperlink;
+    SendChatMessage(message, "RAID_WARNING");
+
+    -- Reset List of /rands
+    self.playerRolls = {};
+
+    -- Listen to /rands
+    FrameUtil.RegisterFrameForEvents(self, HSLM_ElementEvents);
+end
+
+function HSLM_ElementMixin:OnStopRollingItemClicked()
+    local message = "Stop rolling for " .. self.dropInfo.itemHyperlink;
+    SendChatMessage(message, "RAID_WARNING");
+    FrameUtil.UnregisterFrameForEvents(self, HSLM_ElementEvents);
 end
 
 function HSLM_ElementMixin:SetDrop(encounterID, lootListID)
@@ -239,24 +300,10 @@ function HSLM_LootHistoryFrameMixin:OpenToEncounter(encounterID)
 end
 
 function HSLM_LootHistoryFrameMixin:DoFullRefresh()
-	self.encounterInfo = C_LootHistory.GetInfoForEncounter(self.selectedEncounterID);
-
 	local dataProvider = CreateDataProvider();
 	local drops = C_LootHistory.GetSortedDropsForEncounter(self.selectedEncounterID);
-	local anyNotPassed = false;
-	local passedHeaderAdded = false;
 
     for _, dropInfo in ipairs(drops) do
-		if dropInfo.playerRollState == Enum.EncounterLootDropRollState.Pass and not passedHeaderAdded then
-			if anyNotPassed then
-				dataProvider:Insert({isPassedSpacer = true});
-			end
-			dataProvider:Insert({isPassedHeader = true});
-			passedHeaderAdded = true;
-		elseif dropInfo.playerRollState ~= Enum.EncounterLootDropRollState.Pass then
-			anyNotPassed = true;
-		end
-
 		dataProvider:Insert({encounterID = self.selectedEncounterID, lootListID = dropInfo.lootListID});
 	end
 

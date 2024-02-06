@@ -13,6 +13,27 @@
                     <Anchor point="LEFT" x="6" y="0"/>
                 </Anchors>
             </ItemButton>
+
+			<Frame parentKey="PlayerRollsDropDown" inherits="UIDropDownMenuTemplate" parentArray="unknown">
+				<Size x="150" y="28"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="0" y="-10"/>
+				</Anchors>
+			</Frame>
+
+            <Button parentKey="StartRollingItem" inherits="UIPanelButtonTemplate" text="Start">
+                <Size x="64" y="22" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="0" y="-22"/>
+                </Anchors>
+            </Button>
+
+            <Button parentKey="StopRollingItem" inherits="UIPanelButtonTemplate" text="Stop">
+                <Size x="64" y="22" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="0" y="0"/>
+                </Anchors>
+            </Button>
         </Frames>
 
         <Layers>
