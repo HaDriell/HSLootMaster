@@ -1,0 +1,54 @@
+<Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="HSLM_ConfigurationFrame.lua" />
+
+	<Frame name="HSLM_ConfigurationFrame" inherits="BackdropTemplate" secureMixin="HSLM_ConfigurationFrameMixin" virtual="true" parent="UIParent" toplevel="true" resizable="true">
+		<Size x="193" y="87" />
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset x="100" y="-150" />
+			</Anchor>
+		</Anchors>
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" keyType="string" type="global" />
+		</KeyValues>
+		<TitleRegion setAllPoints="true">
+			<Size>
+				<AbsDimension x="0" y="30" />
+			</Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" />
+				<Anchor point="TOPRIGHT" />
+			</Anchors>
+		</TitleRegion>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="RollDurationLabel" inherits="GameFontNormal" text="Durée des rolls" justifyH="LEFT">
+					<Size x="90" y="32" />
+					<Anchors>
+						<Anchor x="15" y="-17" point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="ClearLootRecordsButton" inherits="UIPanelButtonTemplate" text="Effacer l'historique">
+				<Size x="160" y="22" />
+				<Anchors>
+					<Anchor x="15" y="-49" point="TOPLEFT" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Button1_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<EditBox name="RollDurationEditBox" inherits="InputBoxTemplate">
+				<Size x="59" y="32" />
+				<Anchors>
+					<Anchor x="116" y="-17" point="TOPLEFT" />
+				</Anchors>
+			</EditBox>
+		</Frames>
+	</Frame>
+	
+</Ui>
