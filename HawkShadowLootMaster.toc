@@ -1,4 +1,4 @@
-## Interface: 80205
+## Interface: 100206
 ## Title: HawkShadowLootMaster
 ## Version: 1.0
 ## Author: Chantemort-KirinTor
