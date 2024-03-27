@@ -10,3 +10,6 @@
 embeds.xml
 
 HawkShadowLootMaster.lua
+
+HSLM_ConfigurationFrame.lua
+HSLM_ConfigurationFrame.xml

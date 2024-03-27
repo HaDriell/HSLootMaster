@@ -9,33 +9,33 @@ assert(LibDBIcon, "HawkShadowLootMaster requires LibDBIcon-1.0");
 local AceDB = LibStub:GetLibrary("AceDB-3.0");
 assert(AceDB, "HawkShadowLootMaster requires AceDB-3.0");
 
-local HawkShadowLootMaster = LibStub("AceAddon-3.0"):NewAddon("HawkShadowLootMaster"
+local AceAddon = LibStub:GetLibrary("AceAddon-3.0");
+assert(AceAddon, "HawkShadowLootMaster requires AceAddon-3.0");
+
+local HawkShadowLootMaster = AceAddon:NewAddon("HawkShadowLootMaster"
 	, "AceConsole-3.0"
 	, "AceEvent-3.0"
 );
 
 function HawkShadowLootMaster:OnInitialize()
-	self:InitializeFrames();
 	self:InitializeDatabase();
 	self:InitializeMinimapButton();
-end
-
-function HawkShadowLootMaster:InitializeFrames()
-	self.ConfigurationFrame = CreateFrame("HSLM_ConfigurationFrame", "HSLM_ConfigurationFrame", UIParent);
+	self:InitializeFrames();
 end
 
 function HawkShadowLootMaster:InitializeDatabase()
 	local defaults = {
 		profile = {
-
 			-- LibDBIcon wants that
 			minimap = {
 				hide = false,
 			},
+		},
 
-			-- Roll distribution options
-			rolls = {
-				duration = 60,
+		global = {
+			-- ConfigurationFrame variables
+			configuration = {
+				rollDuration = 60,
 			},
 
 			loots = {
@@ -63,37 +63,37 @@ function HawkShadowLootMaster:InitializeMinimapButton()
 	LibDBIcon:Register("HawkShadowLootMaster", dataObject, self.db.profile.minimap);
 end
 
+function HawkShadowLootMaster:InitializeFrames()
+	self.ConfigurationFrame = CreateFrame("Frame", nil, UIParent, "HSLM_ConfigurationFrame");
+	self.ConfigurationFrame:Hide();
+	
+	self.LootFrame = nil; -- TODO : Create the frame XML for that
+end
+
+function HawkShadowLootMaster:ToggleConfigurationFrame()
+	if self.ConfigurationFrame:IsShown() then
+		self.ConfigurationFrame:Hide();
+	else
+		self.ConfigurationFrame:Show();
+	end
+end
+
 function HawkShadowLootMaster:OnMinimapButtonPressed(dataObject, button)
 	if button == "LeftButton" then
-		self:Print("Clicked with Left Button");
-
-		if not TradeFrame:IsShown() then
-			InitiateTrade("raid1");
-		else
-			-- TODO : Abstract in function please
-			local found = false;
-			for bag = 0, 4 do
-				local slots = C_Container.GetContainerNumSlots(bag);
-				for slot = 1, slots do
-					local item = C_Container.GetContainerItemLink(bag, slot);
-					if item and item:find("Rune sifflante") then
-						C_Container.UseContainerItem(bag, slot);
-						found = true;
-					end
-					if found then break; end
-				end
-				if found then break; end
-			end
-			self:Print("Found : ", found);
-		end
-
+		self:ToggleConfigurationFrame();
 	end
-	
+
 	if button == "RightButton" then
 		self:Print("Clicked with Right Button");
 	end
 end
 
+function HawkShadowLootMaster:GetDB()
+	return self.db;
+end
+
+
+-- TODO : use that for automatic trading with a winner
 function HawkShadowLootMaster:TradeItemWith(unitID, itemName)
 	if not TradeFrame:IsShown() then
 		InitiateTrade(unitID);

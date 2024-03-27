@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Export files to your WoW Addon folder",
+			"command": "xcopy",
+			"args": [
+				"${workspaceFolder}",
+				"C:/Program Files (x86)/World of Warcraft/_retail_/Interface/AddOns/HawkShadowLootMaster",
+				"/Y",
+				"/D",
+				"/K",
+				"/S"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

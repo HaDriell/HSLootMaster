@@ -1,25 +1,18 @@
 <Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="HSLM_ConfigurationFrame.lua" />
 
-	<Frame name="HSLM_ConfigurationFrame" inherits="BackdropTemplate" secureMixin="HSLM_ConfigurationFrameMixin" virtual="true" parent="UIParent" toplevel="true" resizable="true">
-		<Size x="193" y="87" />
+	<Frame name="HSLM_ConfigurationFrame" inherits="DefaultPanelFlatTemplate" mixin="HSLM_ConfigurationFrameMixin" virtual="true" movable="true">
+		<Size x="200" y="100" />
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
 		<Anchors>
 			<Anchor point="TOPLEFT">
-				<Offset x="100" y="-150" />
 			</Anchor>
 		</Anchors>
-		<KeyValues>
-			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" keyType="string" type="global" />
-		</KeyValues>
-		<TitleRegion setAllPoints="true">
-			<Size>
-				<AbsDimension x="0" y="30" />
-			</Size>
-			<Anchors>
-				<Anchor point="TOPLEFT" />
-				<Anchor point="TOPRIGHT" />
-			</Anchors>
-		</TitleRegion>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString name="RollDurationLabel" inherits="GameFontNormal" text="Durée des rolls" justifyH="LEFT">
